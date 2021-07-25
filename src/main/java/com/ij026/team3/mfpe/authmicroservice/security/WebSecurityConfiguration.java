@@ -11,8 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
+@SuppressWarnings("deprecation")
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -28,22 +28,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception {
-//		http.authorizeRequests()
-//		.antMatchers("/public/test", "/authenticate", "/authorize-token", "/health").permitAll()
-//				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//				.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);//.exceptionHandling();
-		
+	protected void configure(HttpSecurity httpSecurity) throws Exception {		
 		httpSecurity.csrf().disable()
-		.authorizeRequests().antMatchers("/authenticate", "/public/**").permitAll()
+		.authorizeRequests().antMatchers("/authenticate", "/authorize-token", "/public/**")
+		.permitAll()
 		.anyRequest()
 		.authenticated()
 		.and()
 		.exceptionHandling()
-		.and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
 	}
 
 	@Bean

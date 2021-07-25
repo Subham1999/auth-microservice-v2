@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,7 @@ public class AuthController {
 		return "Test";
 	}
 
+	@CrossOrigin
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<AuthResponse> createAuthenticationToken(HttpServletRequest httpServletRequest,
 			@RequestBody AuthRequest authenticationRequest) throws Exception {
@@ -60,6 +62,7 @@ public class AuthController {
 		return ResponseEntity.ok(authResponse);
 	}
 
+	@CrossOrigin
 	@PostMapping(value = "/authorize-token")
 	public ResponseEntity<String> authorizeToken(
 			@RequestHeader(value = "Authorization", required = true) String authorizationHeaderVal) {
@@ -71,7 +74,7 @@ public class AuthController {
 			if (password == null) {
 				return ResponseEntity.badRequest().body("empId invalid");
 			} else {
-				return ResponseEntity.ok("USER");
+				return ResponseEntity.ok(userName);
 			}
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("jwt token expired");

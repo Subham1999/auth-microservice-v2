@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ public class JwtTokenUtil {
 	private String SECRET_KEY = "SSBoYXRlIFBha2lzdGFuIGJ1dCBJIGxvdmUgSW5kaWE=";
 
 	// one day
-	private long LIFE_TIME = 24 * 60 * 60 * 1000l;
+	@Value("${jwt.lifetime:86400000}")
+	private long LIFE_TIME;// = 24 * 60 * 60 * 1000l;
 
 	public String extractUserName(String jwtToken) {
 		return extractClaim(jwtToken, Claims::getSubject);
@@ -42,13 +44,8 @@ public class JwtTokenUtil {
 	private String createToken(Map<String, Object> claims, UserDetails userDetails) {
 		final Date issueDate = new Date();
 		final Date expirationDate = new Date(issueDate.getTime() + LIFE_TIME);
-		System.err.println("signing with key : " + SECRET_KEY);
-		return Jwts.builder()
-				.setClaims(claims)
-				.setSubject(userDetails.getUsername())
-				.setIssuedAt(issueDate)
-				.setExpiration(expirationDate)
-				.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+		return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername()).setIssuedAt(issueDate)
+				.setExpiration(expirationDate).signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
 	}
 
 	public Boolean validateToken(String jwtToken, UserDetails userDetails) {

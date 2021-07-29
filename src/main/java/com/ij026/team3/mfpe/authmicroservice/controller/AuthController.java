@@ -9,7 +9,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,8 @@ import com.ij026.team3.mfpe.authmicroservice.security.JwtTokenUtil;
 import com.ij026.team3.mfpe.authmicroservice.security.MyUserDetailsService;
 import com.ij026.team3.mfpe.authmicroservice.security.model.AuthRequest;
 import com.ij026.team3.mfpe.authmicroservice.security.model.AuthResponse;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 @RestController
 public class AuthController {
@@ -45,14 +49,10 @@ public class AuthController {
 	@CrossOrigin
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<AuthResponse> createAuthenticationToken(HttpServletRequest httpServletRequest,
-			@RequestBody AuthRequest authenticationRequest) throws Exception {
+			@RequestBody AuthRequest authenticationRequest) {
 
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					authenticationRequest.getUserName(), authenticationRequest.getPassword()));
-		} catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
-		}
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(),
+				authenticationRequest.getPassword()));
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUserName());
 
@@ -83,5 +83,21 @@ public class AuthController {
 	private String extractTokenFromHeader(String authorizationHeaderVal) {
 		// [Bearer ][***jwtToken***]
 		return authorizationHeaderVal.substring(7);
+	}
+
+	@ExceptionHandler(BadCredentialsException.class)
+	public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException badCredentialsException) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badCredentialsException.getMessage());
+	}
+
+	@ExceptionHandler(MissingRequestHeaderException.class)
+	public ResponseEntity<String> handleMissingRequestHeaderException(
+			MissingRequestHeaderException missingRequestHeaderException) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(missingRequestHeaderException.getMessage());
+	}
+
+	@ExceptionHandler(ExpiredJwtException.class)
+	public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException expiredJwtException) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(expiredJwtException.getMessage());
 	}
 }

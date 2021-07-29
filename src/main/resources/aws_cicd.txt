@@ -1,0 +1,26 @@
+1. codestar -> yes create role
+2. choose java spring
+3. project name + project id
+4. choose CodeCommit
+5. create project
+6. choose Key Pair (I have one)
+7. Display name + Email
+8. Choose IDEs AWS cloud9
+9. Choose t2 micro
+10. 
+
+
+941516478045.dkr.ecr.us-east-2.amazonaws.com/ij026-team3-mfpe-registry
+
+
+https://www.youtube.com/watch?v=3FqZ0lbHFws&ab_channel=WalterSchilling
+https://www.youtube.com/watch?v=7wann9aJbNg&ab_channel=BrandanJones
+
+
+
+ ->install (Ecl Emma plugin)
+ 
+ > Service -> Test
+ > Controller -> Test
+ > Context -> Test   => @Service, @Component, @Repository, @RestController
+ > Repository -> Test

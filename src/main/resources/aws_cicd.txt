@@ -24,3 +24,78 @@ https://www.youtube.com/watch?v=7wann9aJbNg&ab_channel=BrandanJones
  > Controller -> Test
  > Context -> Test   => @Service, @Component, @Repository, @RestController
  > Repository -> Test
+ 
+ 
+ 
+ 
+ECR
+
+941516478045.dkr.ecr.us-east-2.amazonaws.com/ij026-team3-mfpe-registry
+
+AWSCodePipelineServiceRole-us-east-2-ij026-subham-mfpe-codepipe [deleted]
+AWSCodePipelineServiceRole-us-east-2-ij026-team3-mfpe-codepipel
+
+codebuild for auth service build -> codebuild-ij026-team3-mfpe-auth-build-service-role
+
+
+
+
+941516478045.dkr.ecr.us-east-2.amazonaws.com/ij026-team3-mfpe-auth-registry:authapp
+
+
+
+
+
+
+
+
+[{"name":"auth-microservice-container","imageUri":"941516478045.dkr.ecr.us-east-2.amazonaws.com/ij026-team3-mfpe-auth-registry:auth-microservice"}]
+
+
+
+
+
+
+
+
+
+
+
+941516478045.dkr.ecr.us-east-2.amazonaws.com/ij026-team3-mfpe-oms-registry
+
+
+lslsalh/** -> auth-tg
+lslsalh/auth/*** -> auth-tg
+lslsalh/offer-service/*** -> oms-tg -> ms1 (/heal), ms2 (/test) (200, ok)
+
+
+
+
+
+codebuild-ij026-team3-mfpe-pms-build-service-role
+
+
+ems image 
+941516478045.dkr.ecr.us-east-2.amazonaws.com/ij026-team3-mfpe-ems-registry:employee-microservice
+
+
+
+
+
+
+----------------------------------------------------
+
+ams
+1. generate token
+2. authorize token
+
+oms
+3. create offer
+4. like offer
+5. search offers based on likes, categories
+
+ems
+6. view profile <- getPointsGained <- pms
+
+----------------------------------------------------
+

@@ -67,7 +67,7 @@ public class AuthController {
 	public ResponseEntity<String> authorizeToken(
 			@RequestHeader(value = "Authorization", required = true) String authorizationHeaderVal) {
 		String jwtToken = extractTokenFromHeader(authorizationHeaderVal);
-		Boolean valid = jwtTokenUtil.isValid(jwtToken);
+		Boolean valid = jwtTokenUtil.isTokenNotExpired(jwtToken);
 		if (valid) {
 			String userName = jwtTokenUtil.extractUserName(jwtToken);
 			String password = loader.getPassword(userName);

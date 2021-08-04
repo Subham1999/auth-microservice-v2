@@ -6,22 +6,44 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.log4j.Log4j2;
+
+/**
+ * @author Subham Santra
+ *
+ */
 @Component
+@Log4j2
 public class UserDetailsLoader implements ApplicationRunner {
 
-	private ConcurrentHashMap<String, String> userDetailsDB = new ConcurrentHashMap<String, String>();
-
-	@Override
-	public void run(ApplicationArguments args) throws Exception {
-		userDetailsDB.put("guru", "abcd1234");
-		userDetailsDB.put("rish", "abcd1234");
-		userDetailsDB.put("subsa", "abcd1234");
-		userDetailsDB.put("nikky", "abcd1234");
-		userDetailsDB.put("ujjw", "abcd1234");
-		System.err.println("User details prepopulated!!");
+	private ConcurrentHashMap<String, String> userDetailsDB;
+	
+	/**
+	 *  Initialize userDetailsDB
+	 */
+	public UserDetailsLoader() {
+		this.userDetailsDB = new ConcurrentHashMap<>();
 	}
 
-	public String getPassword(String empId) {
+	/**
+	 * pre-populates the database
+	 */
+	@Override
+	public void run(final ApplicationArguments args) throws Exception {
+		final String defaultPassword = "abcd1234";
+		userDetailsDB.put("guru", defaultPassword);
+		userDetailsDB.put("rish", defaultPassword);
+		userDetailsDB.put("subsa", defaultPassword);
+		userDetailsDB.put("nikky", defaultPassword);
+		userDetailsDB.put("ujjw", defaultPassword);
+		log.debug("User details prepopulated!!");
+	}
+
+	/**
+	 * @param empId
+	 * @return password, if empId is valid, null otherwise
+	 */
+	public String getPassword(final String empId) {
 		return userDetailsDB.getOrDefault(empId, null);
 	}
 }

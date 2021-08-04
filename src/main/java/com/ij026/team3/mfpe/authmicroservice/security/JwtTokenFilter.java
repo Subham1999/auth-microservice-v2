@@ -1,6 +1,7 @@
 package com.ij026.team3.mfpe.authmicroservice.security;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,7 +16,14 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import lombok.NoArgsConstructor;
+
+/**
+ * @author <b>Subham Santra</b>
+ *
+ */
 @Component
+@NoArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -25,23 +33,23 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	private MyUserDetailsService userDetailsService;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+	protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response,
+			final FilterChain filterChain) throws ServletException, IOException {
 
 		final String authHeader = request.getHeader("Authorization");
 		String userName = null;
 		String jwtToken = null;
 
-		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+		if (Objects.nonNull(authHeader) && authHeader.startsWith("Bearer ")) {
 			jwtToken = authHeader.substring(7);
 			userName = jwtTokenUtil.extractUserName(jwtToken);
 		}
 
-		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails loadUserByUsername = userDetailsService.loadUserByUsername(userName);
+		if (Objects.nonNull(userName) && Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())) {
+			final UserDetails loadUserByUsername = userDetailsService.loadUserByUsername(userName);
 
 			if (jwtTokenUtil.validateToken(jwtToken, loadUserByUsername)) {
-				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+				final UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						jwtToken, null, loadUserByUsername.getAuthorities());
 
 				usernamePasswordAuthenticationToken

@@ -89,7 +89,7 @@ class AuthControllerTest {
 
 	@Test
 	void testAuthorizeToken() throws Exception {
-		when(this.jwtTokenUtil.isValid(validJwtToken)).thenReturn(true);
+		when(this.jwtTokenUtil.isTokenNotExpired(validJwtToken)).thenReturn(true);
 		when(this.jwtTokenUtil.extractUserName(validJwtToken)).thenReturn(validEmpId);
 		when(this.loader.getPassword(validEmpId)).thenReturn("abcd1234");
 
@@ -99,7 +99,7 @@ class AuthControllerTest {
 
 	@Test
 	void testAuthorizeToken_invalidToken() throws Exception {
-		when(this.jwtTokenUtil.isValid(validJwtToken)).thenReturn(false);
+		when(this.jwtTokenUtil.isTokenNotExpired(validJwtToken)).thenReturn(false);
 		mockMvc.perform(post("/authorize-token").header("Authorization", "Bearer " + this.validJwtToken))
 				.andExpect(status().isBadRequest());
 	}
